@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,8 @@ public class AuthService {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 			if (jwtUtil.isTokenValid(tokenDTO.getToken(), userDetails)) {
 				var user = userRepository.findByEmail(email).orElseThrow();
-				return AuthenticationResponse.builder().token(tokenDTO.getToken()).uid(user.getEid()).role(user.getRole()).build();
+				return AuthenticationResponse.builder().token(tokenDTO.getToken()).uid(user.getEid())
+						.role(user.getRole()).build();
 			}
 		}
 		return null;
@@ -64,10 +66,12 @@ public class AuthService {
 	public boolean EmployeeRegistration(RegisterDTO request) {
 		Optional<UserDetailsModel> isUserExists = userRepository.findByEmail(request.getEmail());
 		if (!isUserExists.isPresent()) {
-			var user = UserDetailsModel.builder().name(request.getName()).email(request.getEmail())
-					.password(passwordEncoder.encode(request.getPassword())).isEnabled(true)
-					.role(Role.valueOf(request.getRole().toUpperCase())).build();
-			userRepository.save(user);
+			UserDetailsModel userDetails = new UserDetailsModel();
+			BeanUtils.copyProperties(request, userDetails);
+			userDetails.setRole(Role.valueOf(request.getRole().toUpperCase()));
+			userDetails.setPassword(passwordEncoder.encode(request.getPhoneNumber()));
+			userDetails.setIsEnabled(true);
+			userRepository.save(userDetails);
 			return true;
 		} else {
 			return false;

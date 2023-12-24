@@ -29,37 +29,36 @@ import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-
 import com.amypo.amypobackend.Models.enumerate.Role;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "userdetails")
+@Table(name = "_users")
 @Builder
 public class UserDetailsModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String eid;
-    private String emp_id;
+    private String empId;
     private String name;
     private String email;
-    private String bloodgroup;
-    private String phonenumber;
+    private String bloodGroup;
+    private String phoneNumber;
     private String password;
     private Date dob;
-    private String aadharnumber;
-    private String pannumber;
-    private boolean maritalstatus;
-    private String profileimage;
-    private String certificateimage;
+    private String aadhaarNumber;
+    private String panNumber;
+    private boolean maritalStatus;
+    private String profile;
+    private String certificateImage;
     private String address;
-    private String emergencycontact;
+    private String emergencyContact;
 
     @OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_user_id", referencedColumnName = "eid")
-    private List<LeaveModel> leavedata;
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "eid")
+    private List<LeaveModel> leaveData;
 
     @Column(nullable = false)
     private Boolean isEnabled;

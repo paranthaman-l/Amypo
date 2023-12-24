@@ -1,18 +1,37 @@
 import { Button } from '@material-tailwind/react';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AddEmployee from '../Employees/AddEmployee';
+import Services from '../../../Api/Services';
+import toast from 'react-hot-toast';
+import EditEmployee from '../Employees/EditEmployee';
 
 export const Addemployeesection = () => {
   const [open, setOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [editData, setEditData] = useState()
   const cancelButtonRef = useRef(null)
+  const cancelEditButtonRef = useRef(null)
+  const [employees, setEmployees] = useState([]);
+  const getData = async () => {
+    await Services.getEmployees().then((response) => {
+      setEmployees(response.data);
+    }).catch((error) => {
+      console.log(error.message);
+    })
+  }
+  useEffect(() => {
+    getData();
+  }, [])
+
   return (
     <>
       <main className="w-full font-ubuntu h-[40em] mt-3 rounded-md shadow-xl">
-        <AddEmployee cancelButtonRef={cancelButtonRef} open={open} setOpen={setOpen}/>
+        <AddEmployee getData={getData} cancelButtonRef={cancelButtonRef} open={open} setOpen={setOpen} />
+        <EditEmployee getData={getData} cancelButtonRef={cancelEditButtonRef} open={editOpen} setOpen={setEditOpen} data={editData} setData={setEditData}/>
         <section className="px-3">
           <div className="flex w-full justify-between">
             <p className='flex items-center text text-[#555555] font-bold'>Employee List</p>
-            <Button onClick={()=>setOpen(true)} className='border border-darkgray border-opacity-35 px-3 py-2 rounded-lg bg-green1'>Add New</Button>
+            <Button onClick={() => setOpen(true)} className='border border-darkgray border-opacity-35 px-3 py-2 rounded-lg bg-green1'>Add New</Button>
           </div>
           <div className="mt-8 ">
             <div className="overflow-x-auto">
@@ -58,7 +77,7 @@ export const Addemployeesection = () => {
                       </svg></div>
                     </th>
                     <th className="p-2 whitespace-nowrap">
-                      <div className="font-semibold text-left">Join Date     <svg
+                      <div className="font-semibold text-left">Date of Birth     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 320 512"
                         className="w-[0.75rem] h-[0.75rem] inline ml-1 text-neutral-500 dark:text-neutral-200 mb-[1px]"
@@ -85,42 +104,47 @@ export const Addemployeesection = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#f0f0f0] text-sm">
-                  <tr className='hover:bg-[#f0f0f0]  min-w-8'>
-                    <td>
-                      <input type="checkbox" name="" className='mr-2 ' id="" />
-                    </td>
-                    <td className="p-2 whitespace-nowrap py-4">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 flex-shrink-0 mr-5 sm:mr-3"><img className="rounded-full" src="https://wrraptheme.com/templates/lucid/hr/bs5/dist/assets/images/user.png" width="40" height="40" alt="Alex Shatov" /></div>
-                        <div className="font-medium text-gray-800">
-                          <p className='font-bold'>Alex Shatov</p>
-                          <p className='text-sm  text-darkgray2'>alexshatov@gmail.com</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">alexshatov@gmail.com</div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left ">+91 1234567890</div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">01 Jan, 2023</div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">Admin</div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left flex items-center justify-center">
-                        <button className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#6c757d] duration-200 rounded'>
-                          <i className="fa fa-edit  group-hover:text-white "></i>
-                        </button>
-                        <button className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#fc5a69] duration-200 rounded'>
-                          <i className="fa-regular fa-trash-can text-[#fc5a69] group-hover:text-white"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  {employees?.map((employee, i) => {
+                    return (
+                      <tr key={i} className='hover:bg-[#f0f0f0]  min-w-8'>
+                        <td>
+                          <input type="checkbox" name="" className='mr-2 ' id="" />
+                        </td>
+                        <td className="p-2 whitespace-nowrap py-4">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 flex-shrink-0 mr-5 sm:mr-3"><img className="rounded-full" src="https://wrraptheme.com/templates/lucid/hr/bs5/dist/assets/images/user.png" width="40" height="40" alt="Alex Shatov" /></div>
+                            <div className="font-medium text-gray-800">
+                              <p className='font-bold'>{employee?.name}</p>
+                              <p className='text-sm  text-darkgray2'>{employee?.email}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-left">{employee?.empId}</div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-left ">+91 {employee?.phoneNumber}</div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-left">{new Date(employee?.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-left">{employee?.role}</div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-left flex items-center justify-center">
+                            <button onClick={()=>{setEditOpen(true);setEditData(employee)}} className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#6c757d] duration-200 rounded'>
+                              <i className="fa fa-edit  group-hover:text-white "></i>
+                            </button>
+                            <button className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#fc5a69] duration-200 rounded'>
+                              <i className="fa-regular fa-trash-can text-[#fc5a69] group-hover:text-white"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+
                 </tbody>
               </table>
             </div>

@@ -16,6 +16,7 @@ public class LeaveService {
     private LeaveRepository leaveRepository;
 
     public LeaveModel postleave(LeaveModel lm) {
+
         return leaveRepository.save(lm);
     }
 
@@ -62,11 +63,11 @@ public class LeaveService {
         Date monthEndDate = calendar.getTime();
 
         // Fetch existing paid leave records for the given month
-        List<LeaveModel> paidLeaveRecords = leaveRepository.findByLeavetypeAndDateBetween("PAID", monthStartDate, monthEndDate);
+        List<LeaveModel> paidLeaveRecords = leaveRepository.findByLeaveTypeAndCreatedAtBetween("PAID", monthStartDate, monthEndDate);
 
         // Count the number of days in the fetched records
         int totalPaidLeaveDaysInMonth = paidLeaveRecords.stream()
-                .mapToInt(LeaveModel::getNumberofdays)
+                .mapToInt(LeaveModel::getNumberOfDays)
                 .sum();
 
         // Check if the total exceeds 1 day

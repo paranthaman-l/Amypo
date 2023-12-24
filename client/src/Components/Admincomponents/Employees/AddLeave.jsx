@@ -1,21 +1,15 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Button, Input } from '@material-tailwind/react/'
 const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
-    // private Date datefrom;
-    // private Date dateto;
-    // private int numberofdays;
-    // private String leavetype;
-    // private String leaveduration;
-    // private String description;
-    // private String username;
-    // private String email;
-    // private String userimage;
-    // private String status;
+    const [formData,setFormData] = useState();
 
+    const handleChange= (e) => {
+        const {name,value} = e.target;
+        setFormData({...formData,[name]:value})
+    }
     return (
         <Transition.Root show={open} as={Fragment} >
             <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
@@ -44,7 +38,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                <form className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                     <div className="sm:flex sm:items-start flex justify-center items-center w-full">
                                         {/* <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                             <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
@@ -56,16 +50,16 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                             <hr className='text-[#f0f0f0] py-2' />
                                             <div className="-mx-3 md:flex mb-6">
                                                 <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="grid-first-name">
+                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dateFrom">
                                                         From Date :
                                                     </label>
-                                                    <input className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="grid-first-name" type="date" placeholder="Jane" />
+                                                    <input name='dateFrom' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="dateFrom" type="date" placeholder="" />
                                                 </div>
                                                 <div className="md:w-1/2 px-3">
-                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dateTo">
                                                         To Date :
                                                     </label>
-                                                    <input className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="grid-last-name" type="date" placeholder="Doe" />
+                                                    <input name='dateTo' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dateTo" type="date" placeholder="Doe" />
                                                 </div>
                                             </div>
                                             {/* <div className="md:w-full mb-5">
@@ -89,7 +83,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input type="radio" value="1" className="peer hidden" name="leavetype" />
+                                                        <input onChange={handleChange} type="radio" value="Pain" className="peer hidden" name="leaveType" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Paid</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -99,7 +93,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                                     </label>
 
                                                     <label>
-                                                        <input type="radio" value="1" className="peer hidden" name="leavetype" />
+                                                        <input onChange={handleChange} type="radio" value="Un Paid" className="peer hidden" name="leaveType" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Un Paid</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -115,7 +109,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input type="radio" value="1" className="peer hidden" name="leaveduration" />
+                                                        <input onChange={handleChange} type="radio" value="Full Day" className="peer hidden" name="leaveDuration" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Full Day</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -125,7 +119,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                                     </label>
 
                                                     <label>
-                                                        <input type="radio" value="1" className="peer hidden" name="leaveduration" />
+                                                        <input onChange={handleChange} type="radio" value="Half Day" className="peer hidden" name="leaveDuration" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Half Day</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -137,33 +131,33 @@ const AddLeave = ({ open, setOpen, cancelButtonRef }) => {
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
                                                 <div className="md:w-full px-3">
-                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="grid-password">
+                                                    <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="reason">
                                                         Reason :
                                                     </label>
-                                                    <textarea rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="grid-password" type="text" placeholder="Vacation..." />
+                                                    <textarea name='reason' rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="reason" type="text" placeholder="Vacation..." />
                                                 </div>
                                             </div>
-                                           
+
                                         </div>
                                     </div>
-                                </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                    <Button
-                                        type="button"
-                                        className="inline-flex w-full justify-center rounded-md bg-green1  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                                        onClick={() => setOpen(false)}
-                                    >
-                                        Add Leave
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                        onClick={() => setOpen(false)}
-                                        ref={cancelButtonRef}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </div>
+                                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                        <Button
+                                            type="submit"
+                                            className="inline-flex w-full justify-center rounded-md bg-green1  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            Add Leave
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                            onClick={() => setOpen(false)}
+                                            ref={cancelButtonRef}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </form>
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>

@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import com.amypo.amypobackend.constant.Api;
 import com.amypo.amypobackend.services.LeaveService;
+import com.amypo.amypobackend.services.UserService;
 import com.amypo.amypobackend.services.AuthService;
 import com.amypo.amypobackend.dtos.RegisterDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.amypo.amypobackend.Models.LeaveModel;
+import com.amypo.amypobackend.Models.UserDetailsModel;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(value = Api.FRONTEND)
 @RequestMapping({ Api.ADMIN })
 public class AdminController {
 
@@ -29,11 +32,14 @@ public class AdminController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO request) {
         boolean isRegistered = authService.EmployeeRegistration(request);
         return isRegistered ? ResponseEntity.ok("User registered successfully")
-                : ResponseEntity.badRequest().body("Something went wrong!");
+                : ResponseEntity.badRequest().body("Already registered Email!");
     }
 
     @PutMapping("/approveLeave")
@@ -47,13 +53,18 @@ public class AdminController {
     }
 
     @GetMapping("/getleavebystatus")
-    public List<LeaveModel> getapprovedleavedata(@RequestParam String status){
-    return LeaveService.findAllMyStatus(status);
+    public List<LeaveModel> getapprovedleavedata(@RequestParam String status) {
+        return LeaveService.findAllMyStatus(status);
     }
 
     @GetMapping("/getallleave")
-    public List<LeaveModel> getleaveinfo(){
-    return LeaveService.getleave();
+    public List<LeaveModel> getleaveinfo() {
+        return LeaveService.getleave();
     }
 
+    @GetMapping("/getEmployees")
+    public List<UserDetailsModel> getEmployees(){
+        return userService.getEmployees();
+    }
+ 
 }

@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import login from "../../assets/logo/bg.png";
 import "../../Styles/App.css"
 import Services from '../../Api/Services'
+import { adminApi } from "../../Api/axios";
 
 export const SignIn = () => {
   const navigate = useNavigate();
@@ -31,14 +32,13 @@ export const SignIn = () => {
         localStorage.setItem("token", res.data.token);
         toast.custom((t) => (
           <div
-            className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${
-              t.visible
+            className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"
-            } duration-300 ease-in-out`}>
+              } duration-300 ease-in-out`}>
             <div className="flex items-center gap-2 text-white">
               <span>
-                <i class="fa-solid fa-circle-check"></i>
+                <i className="fa-solid fa-circle-check"></i>
               </span>
               <div>
                 <span className="">Login successfull!</span>
@@ -48,6 +48,10 @@ export const SignIn = () => {
         ));
         setTimeout(() => {
           if (localStorage.getItem("role") === "ADMIN") {
+            adminApi.interceptors.request.use((config) => {
+              config.headers.Authorization = "Bearer " + res.data.token;
+              return config;
+            })
             navigate("/adminDashboard");
           } else {
             navigate("/userhome");
@@ -59,14 +63,13 @@ export const SignIn = () => {
         console.log(err.message);
         toast.custom((t) => (
           <div
-            className={`bg-[#ff5e5b] text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${
-              t.visible
+            className={`bg-[#ff5e5b] text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"
-            } duration-300 ease-in-out`}>
+              } duration-300 ease-in-out`}>
             <div className="flex items-center gap-2 text-white">
               <span>
-                <i class="fa-solid text-xl fa-circle-xmark"></i>
+                <i className="fa-solid text-xl fa-circle-xmark"></i>
               </span>
               <div>
                 <span className="">Login failed!</span>

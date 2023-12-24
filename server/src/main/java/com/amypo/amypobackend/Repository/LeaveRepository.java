@@ -13,6 +13,6 @@ public interface LeaveRepository extends JpaRepository<LeaveModel,String> {
 
     public List<LeaveModel> findAllByStatus(String status);
 
-    List<LeaveModel> findByLeavetypeAndDateBetween(String leaveType, Date startDate, Date endDate);
+    public List<LeaveModel> findByLeaveTypeAndCreatedAtBetween(String string, Date monthStartDate, Date monthEndDate);
 
 }

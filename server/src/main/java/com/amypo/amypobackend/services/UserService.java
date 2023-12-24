@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amypo.amypobackend.Models.UserDetailsModel;
+import com.amypo.amypobackend.Models.enumerate.Role;
 import com.amypo.amypobackend.Repository.UserRepository;
 
 @Service
@@ -33,5 +34,9 @@ public class UserService{
 
     public UserDetailsModel getuserbyemail(String email){
     return ur.findByEmail(email).get();
+    }
+
+    public List<UserDetailsModel> getEmployees() {
+        return ur.findAllUsersExceptAdmin();
     }
 }

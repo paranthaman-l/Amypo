@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
@@ -5,8 +6,7 @@ import { Button } from '@material-tailwind/react/'
 import Selector from '../../Selection'
 import Services from '../../../Api/Services'
 import toast, { Toaster } from "react-hot-toast";
-const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
-    const [formData, setFormData] = useState();
+const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData}) => {
     const datas = [
         {
             label: "Trainer",
@@ -60,49 +60,50 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
         },
     ]
     const profileRef = useRef(null);
-    const [profile, setProfile] = useState();
-    const [role, setRole] = useState("");
-    const [bloodGroup, setBloodGroup] = useState("");
+    const [profile, setProfile] = useState("");
+    const [role, setRole] = useState(data?.role);
+    const [bloodGroup, setBloodGroup] = useState(data?.bloodGroup);
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setData({ ...data, [name]: value });
     }
     useEffect(() => {
-        setFormData({ ...formData, "role": role })
+        setData({ ...data, "role": role })
     }, [role])
     useEffect(() => {
-        setFormData({ ...formData, "bloodGroup": bloodGroup })
+        setData({ ...data, "bloodGroup": bloodGroup })
     }, [bloodGroup])
     const handleProfileChange = (e) => {
         e.preventDefault();
-        // setFormData({...formData, "profile": e.target.files[0]});
+        // setData({...data, "profile": e.target.files[0]});
         setProfile(e.target.files[0])
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        Services.AddEmployee(formData).then((response) => {
+        Services.EditEmployee(data).then((response) => {
             toast.custom((t) => (
                 <div
-                    className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
-                        } duration-300 ease-in-out`}>
-                    <div className="flex items-center gap-2 text-white">
-                        <span>
-                            <i className="fa-solid fa-circle-check"></i>
-                        </span>
-                        <div>
-                            <span className="">Employee Add successFull !</span>
-                        </div>
+                  className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4"
+                    } duration-300 ease-in-out`}>
+                  <div className="flex items-center gap-2 text-white">
+                    <span>
+                      <i className="fa-solid fa-circle-check"></i>
+                    </span>
+                    <div>
+                      <span className="">Update successFull!</span>
                     </div>
+                  </div>
                 </div>
-            ));
-            setTimeout(() => {
-                getData();
-                setOpen(false);
-                toast.remove();
-            }, 1500);
+              ));
+              setTimeout(() => {
+                    getData();
+                    setOpen(false);
+                    toast.remove();
+              }, 1500);
         }).catch((error) => {
+            console.log(error);
             toast.custom((t) => (
                 <div
                     className={`bg-[#ff5e5b] text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
@@ -122,6 +123,9 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                 </div>
             ));
         })
+        setTimeout(() => {
+            toast.remove();
+      }, 1500);
     }
     return (
         <Transition.Root show={open} as={Fragment} >
@@ -167,7 +171,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                     <div className="sm:flex sm:items-start flex justify-center items-center  h-[500px] overflow-y-scroll  w-full">
                                         <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                             <Dialog.Title as="h3" className="text-base fixed z-10 top-0 h-20 bg-white w-full flex items-center font-semibold leading-6 text-gray-900">
-                                                Add New Employee
+                                                Edit Employee
                                             </Dialog.Title>
                                             <hr className='text-[#f0f0f0] py-2' />
                                             <div className="-mx-3 md:flex mb-6 mt-12">
@@ -175,13 +179,13 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="name">
                                                         Name :
                                                     </label>
-                                                    <input name='name' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="name" type="text" placeholder="Name" />
+                                                    <input value={data?.name} name='name' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="name" type="text" placeholder="Name" />
                                                 </div>
                                                 <div className="md:w-1/2 px-3">
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="empId">
                                                         Employee ID :
                                                     </label>
-                                                    <input name='empId' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="empId" type="text" placeholder="Employee ID" />
+                                                    <input value={data?.empId} name='empId' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="empId" type="text" placeholder="Employee ID" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -189,7 +193,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="email">
                                                         Email :
                                                     </label>
-                                                    <input name='email' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="email" type="email" placeholder="Email" />
+                                                    <input disabled value={data?.email} name='email' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="email" type="email" placeholder="Email" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -197,7 +201,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="phoneNumber">
                                                         Mobile No :
                                                     </label>
-                                                    <input name='phoneNumber' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="phoneNumber" type="text" placeholder="Mobile No" />
+                                                    <input value={data?.phoneNumber} name='phoneNumber' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="phoneNumber" type="text" placeholder="Mobile No" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -205,7 +209,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="emergencyContact">
                                                         Emergency Contact No :
                                                     </label>
-                                                    <input name='emergencyContact' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="emergencyContact" type="text" placeholder="Emergency Contact No" />
+                                                    <input value={data?.emergencyContact} name='emergencyContact' onChange={handleChange} rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="emergencyContact" type="text" placeholder="Emergency Contact No" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6 mt-12">
@@ -213,21 +217,21 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="panNumber">
                                                         PAN Number :
                                                     </label>
-                                                    <input name='panNumber' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="panNumber" type="text" placeholder="PAN Number" />
+                                                    <input value={data?.panNumber} name='panNumber' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="panNumber" type="text" placeholder="PAN Number" />
                                                 </div>
                                                 <div className="md:w-1/2 px-3">
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dob">
                                                         DOB :
                                                     </label>
-                                                    <input name='dob' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dob" type="date" placeholder="DOB" />
+                                                    <input value={data?.dob?.substring(0,10)} name='dob' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dob" type="date" placeholder="DOB" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6 mt-12">
                                                 <div className="md:w-1/2 mx-2  mb-6 md:mb-0">
-                                                    <Selector title={"Role"} datas={datas} data={role} setData={setRole} />
+                                                    <Selector title={"Role"} datas={datas} data={data?.role} setData={setRole} />
                                                 </div>
                                                 <div className="md:w-1/2 ">
-                                                    <Selector title={"Blood Group"} datas={bloodGroupData} data={bloodGroup} setData={setBloodGroup} />
+                                                    <Selector title={"Blood Group"} datas={bloodGroupData} data={data?.bloodGroup} setData={setBloodGroup} />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -235,7 +239,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="address">
                                                         Address :
                                                     </label>
-                                                    <textarea name='address' onChange={handleChange} rows={2} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="address" type="text" placeholder="Address..." />
+                                                    <textarea value={data?.address} name='address' onChange={handleChange} rows={2} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="address" type="text" placeholder="Address..." />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -243,7 +247,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="aadhaarNumber">
                                                         Aadhaar No :
                                                     </label>
-                                                    <input name='aadhaarNumber' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="aadhaarNumber" type="text" placeholder="Aadhaar No" />
+                                                    <input value={data?.aadhaarNumber} name='aadhaarNumber' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="aadhaarNumber" type="text" placeholder="Aadhaar No" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6">
@@ -257,7 +261,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                                 <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clipRule="evenodd"></path>
                                                             </svg>
                                                         }
-                                                        <input name='profile' onChange={handleProfileChange} type="file" accept='image/*' ref={profileRef} className='' style={{ display: "none" }} id="profile" />
+                                                        <input value={data?.profile} name='profile' onChange={handleProfileChange} type="file" accept='image/*' ref={profileRef} className='' style={{ display: "none" }} id="profile" />
                                                         <Button onClick={() => profileRef.current.click()} className='bg-green1 text-white mx-5 shadow-lg'>Upload</Button>
                                                     </span>
 
@@ -269,7 +273,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value={true} className="peer hidden" name="maritalStatus" />
+                                                        <input checked={data?.name} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Married</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -279,7 +283,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     </label>
 
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value={false} className="peer hidden" name="maritalStatus" />
+                                                        <input checked={data?.name} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Un Married</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -297,7 +301,7 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
                                             className="inline-flex w-full justify-center rounded-md bg-green1  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                             onClick={handleSubmit}
                                         >
-                                            Add New Employee
+                                            Update Employee
                                         </Button>
                                         <Button
                                             type="button"
@@ -318,4 +322,4 @@ const AddEmployee = ({ open, setOpen, cancelButtonRef, getData }) => {
     )
 }
 
-export default AddEmployee
+export default EditEmployee

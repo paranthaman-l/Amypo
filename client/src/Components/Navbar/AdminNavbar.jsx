@@ -17,24 +17,28 @@ import { IoSettings } from "react-icons/io5";
 import { IoLogOut } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { adminApi } from '../../Api/axios';
 const AdminNavbar = () => {
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
         localStorage.removeItem("uid");
+        if (localStorage.getItem("role") === "ADMIN") {
+            adminApi.interceptors.request.clear();
+        }
         toast.custom((t) => (
             <div
                 className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
                     } duration-300 ease-in-out`}>
                 <div className="flex items-center gap-2 text-white">
                     <span>
                         <i className="fa-solid fa-circle-check"></i>
                     </span>
                     <div>
-                        <span className="">Logout successfull!</span>
+                        <span className="">Logout successFull !</span>
                     </div>
                 </div>
             </div>

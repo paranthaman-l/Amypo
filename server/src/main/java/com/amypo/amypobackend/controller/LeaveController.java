@@ -37,18 +37,18 @@ public class LeaveController{
 
         String email =lm.getEmail();
         UserDetailsModel user = us.getuserbyemail(email);
-        List<LeaveModel> leaves = user.getLeavedata();
+        List<LeaveModel> leaves = user.getLeaveData();
 
         for(LeaveModel l : leaves){
 
         }
 
-        Date startdate = lm.getDatefrom();
+        Date startdate = lm.getDateFrom();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate sdate = startdate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
         for(LeaveModel l : leaves){
                 if(l.getEmail() == email && l.getStatus() == "approved"){
-                    Date enddate = l.getDateto();
+                    Date enddate = l.getDateTo();
                     LocalDate edate = enddate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
                     int comparisonResult = sdate.compareTo(edate);
                     if (comparisonResult < 0) {

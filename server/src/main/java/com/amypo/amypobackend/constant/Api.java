@@ -1,7 +1,7 @@
 package com.amypo.amypobackend.constant;
 
 public class Api {
-    public static final String FRONTEND = "http://localhost:";
+    public static final String FRONTEND = "http://localhost:5173";
     public static final String AUTH = "/auth";
     public static final String ADMIN = "/admin";
     public static final String TRAINER = "/trainer";

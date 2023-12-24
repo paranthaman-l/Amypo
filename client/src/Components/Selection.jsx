@@ -5,7 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 
 const Selector = ({ datas, setData, data, title }) => {
   const [inputValue, setInputValue] = useState("");
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(data);
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ const Selector = ({ datas, setData, data, title }) => {
         className={`bg-white w-full  p-2 flex items-center justify-between rounded border border-[#f0f0f0] ${!selected && "text-darkgray2"
           }`}
       >
-        {selected
+        {(selected)
           ? selected?.length > 25
             ? selected?.substring(0, 25) + "..."
             : selected
@@ -51,7 +51,7 @@ const Selector = ({ datas, setData, data, title }) => {
                 : "hidden"
               }`}
             onClick={() => {
-              if (d?.value?.toLowerCase() !== selected.toLowerCase()) {
+              if (d?.value?.toLowerCase() !== selected?.toLowerCase()) {
                 setSelected(d?.label);
                 setData(d?.value);
                 setOpen(false);

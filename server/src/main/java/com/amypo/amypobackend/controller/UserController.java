@@ -34,7 +34,7 @@ public class UserController {
         return us.saveuserdata(userdata);
     }
 
-    @PutMapping("/updatedata")
+    @PutMapping("/updateUser")
     public UserDetailsModel updateuserdata(@RequestBody UserDetailsModel userdata, @RequestParam String id) {
         return us.updateuserdata(userdata, id);
     }
