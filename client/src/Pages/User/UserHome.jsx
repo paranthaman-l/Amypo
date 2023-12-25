@@ -6,9 +6,6 @@ export const UserHome = () => {
       <div>
         hi
       </div>
-
-
-
     </>
   )
 }

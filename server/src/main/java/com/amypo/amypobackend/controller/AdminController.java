@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 import com.amypo.amypobackend.constant.Api;
 import com.amypo.amypobackend.services.LeaveService;
 import com.amypo.amypobackend.services.UserService;
 import com.amypo.amypobackend.services.AuthService;
 import com.amypo.amypobackend.dtos.RegisterDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.amypo.amypobackend.Models.LeaveModel;
 import com.amypo.amypobackend.Models.UserDetailsModel;
@@ -28,7 +29,7 @@ import com.amypo.amypobackend.Models.UserDetailsModel;
 public class AdminController {
 
     @Autowired
-    private LeaveService LeaveService;
+    private LeaveService leaveService;
     @Autowired
     private AuthService authService;
 
@@ -44,27 +45,41 @@ public class AdminController {
 
     @PutMapping("/approveLeave")
     public String approveLeave(@RequestParam String lid) {
-        return LeaveService.approveLeave(lid);
+        return leaveService.approveLeave(lid);
     }
 
     @PutMapping("/declineLeave")
     public String declineLeave(@RequestParam String lid) {
-        return LeaveService.declineLeave(lid);
+        return leaveService.declineLeave(lid);
     }
 
     @GetMapping("/getleavebystatus")
     public List<LeaveModel> getapprovedleavedata(@RequestParam String status) {
-        return LeaveService.findAllMyStatus(status);
+        return leaveService.findAllMyStatus(status);
     }
 
     @GetMapping("/getallleave")
     public List<LeaveModel> getleaveinfo() {
-        return LeaveService.getleave();
+        return leaveService.getleave();
     }
 
     @GetMapping("/getEmployees")
     public List<UserDetailsModel> getEmployees(){
         return userService.getEmployees();
     }
+
+    @GetMapping("/getPendingLeaves")
+    public List<LeaveModel> getPendingLeaves(){
+        return leaveService.getPendingLeaves();
+    }
  
+    @DeleteMapping("/deleteUser")
+    public void deletebyid(@RequestParam String eid) {
+        userService.deleteuserbyid(eid);
+    }
+
+    @GetMapping("/getEmployeesByRole")
+    public List<UserDetailsModel> getEmployeesByRole(@RequestParam String role){
+        return userService.getUserByRole(role);
+    }
 }

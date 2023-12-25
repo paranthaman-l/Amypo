@@ -5,11 +5,11 @@ import { Adminroutes } from "../Privateroutes/Adminroutes/Adminroutes";
 import { Userroutes } from "../Privateroutes/Userroutes/Userroutes";
 import { AdminHome } from "../Pages/Admin/AdminHome";
 import { SignIn } from "../Pages/Auth/SignIn";
-import { AddEmployee } from "../Pages/Admin/AddEmployee/AddEmployee";
-import AdminNavbar from "../Components/Navbar/AdminNavbar";
 import { Dashboardsection } from "../Components/Admincomponents/Dashboard/Dashboardsection";
-import AllEmployees from "../Components/Admincomponents/Employees/AllEmployees";
-import LeaveRequests from "../Components/Admincomponents/Employees/LeaveRequests";
+import AllEmployees from "../Pages/Admin/AddEmployee/AllEmployees";
+import LeaveRequests from "../Pages/Admin/Leave/LeaveRequests";
+import UserDashboard from "../Pages/User/UserDashboard";
+import LeaveApply from "../Pages/User/LeaveApply";
 
 export const Routers = () => {
   return (
@@ -20,11 +20,12 @@ export const Routers = () => {
            */}
           <Route>
             <Route path="/signin" element={<SignIn />} />
-            <Route path="/Employeelist" element={<AddEmployee/>}/>
           </Route>
           {/* userroutes  */}
           <Route element={<Userroutes />}>
             <Route path="/" element={<UserHome />} />
+            <Route path="/userDashboard" element={<UserDashboard />} />
+            <Route path="/applyLeave" element={<LeaveApply />} />
           </Route>
 
           {/* adminroutes  */}

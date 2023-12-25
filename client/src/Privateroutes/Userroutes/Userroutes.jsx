@@ -5,6 +5,6 @@ import { Navigate } from 'react-router-dom';
 export const Userroutes = () => {
 
   const usertoken=localStorage.getItem("token") !==null;
-  const role=localStorage.getItem("role") === "USER";
+  const role=localStorage.getItem("role") !== "ADMIN";
   return usertoken && role ? <Outlet/> : <Navigate path="/signin"/>
 }

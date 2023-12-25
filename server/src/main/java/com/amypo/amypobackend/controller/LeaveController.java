@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +24,7 @@ import com.amypo.amypobackend.constant.Api;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping({Api.ADMIN,Api.TRAINER,Api.DEVELOPER,Api.CONTENTDEVELOPER,Api.BDM})
+@RequestMapping({Api.ADMIN,Api.TRAINER,Api.DEVELOPER,Api.CONTENTDEVELOPER,Api.BDM,Api.COMMON})
 public class LeaveController{
 
     @Autowired
@@ -33,21 +34,14 @@ public class LeaveController{
     private UserService us;
 
     @PostMapping("/postleave")
-    public String postleave(@RequestBody LeaveModel lm){
-
-        String email =lm.getEmail();
-        UserDetailsModel user = us.getuserbyemail(email);
+    public String postleave(@RequestBody LeaveModel lm,@RequestParam String eid){
+        UserDetailsModel user = us.getUserById(eid);
         List<LeaveModel> leaves = user.getLeaveData();
-
-        for(LeaveModel l : leaves){
-
-        }
-
         Date startdate = lm.getDateFrom();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate sdate = startdate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
         for(LeaveModel l : leaves){
-                if(l.getEmail() == email && l.getStatus() == "approved"){
+                if(l.getEmail() == user.getEmail() && l.getStatus() == "approved"){
                     Date enddate = l.getDateTo();
                     LocalDate edate = enddate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
                     int comparisonResult = sdate.compareTo(edate);
@@ -56,8 +50,7 @@ public class LeaveController{
                     }
                 }
             }
-
-        ls.postleave(lm);
+        ls.postleave(lm,user);
         return "Leave applied successfully";
     }
 
@@ -71,4 +64,8 @@ public class LeaveController{
     return ls.editleave(lm,lid);
     }
 
+    @GetMapping("/getDataByStatusInUser")
+    public List<LeaveModel> getDataByStatusInUser(@RequestParam String eid,@RequestParam String status){
+        return ls.findAllByStatusAndId(eid,status);
+    }
 }

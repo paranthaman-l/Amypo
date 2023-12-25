@@ -18,7 +18,7 @@ import com.amypo.amypobackend.services.UserService;
 import com.amypo.amypobackend.constant.Api;
 @RestController
 @CrossOrigin("*")
-@RequestMapping({Api.ADMIN,Api.TRAINER,Api.DEVELOPER,Api.CONTENTDEVELOPER,Api.BDM})
+@RequestMapping({Api.ADMIN,Api.TRAINER,Api.DEVELOPER,Api.CONTENTDEVELOPER,Api.BDM,Api.COMMON})
 public class UserController {
 
     @Autowired

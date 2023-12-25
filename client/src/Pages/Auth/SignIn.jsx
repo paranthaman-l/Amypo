@@ -5,9 +5,10 @@ import toast, { Toaster } from "react-hot-toast";
 import login from "../../assets/logo/bg.png";
 import "../../Styles/App.css"
 import Services from '../../Api/Services'
-import { adminApi } from "../../Api/axios";
-
+import { adminApi, commonApi, contentDeveloperApi, developerApi } from "../../Api/axios";
+import { useStates } from '../../useContext/UseStates'
 export const SignIn = () => {
+  const { user, setUser } = useStates();
   const navigate = useNavigate();
   const [formData, setFormdata] = useState({
     email: "",
@@ -25,16 +26,21 @@ export const SignIn = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     await Services.SignIn(formData)
-      .then((res) => {
+      .then(async (res) => {
         console.log(res.data);
         localStorage.setItem("role", res.data.role);
         localStorage.setItem("uid", res.data.uid);
         localStorage.setItem("token", res.data.token);
+        await Services.getUserById(res.data.uid).then((response) => {
+          setUser(response.data);
+        }).catch((error) => {
+          console.log(error);
+        })
         toast.custom((t) => (
           <div
             className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
               } duration-300 ease-in-out`}>
             <div className="flex items-center gap-2 text-white">
               <span>
@@ -47,15 +53,32 @@ export const SignIn = () => {
           </div>
         ));
         setTimeout(() => {
-          if (localStorage.getItem("role") === "ADMIN") {
+          if (res.data.role === "ADMIN") {
             adminApi.interceptors.request.use((config) => {
               config.headers.Authorization = "Bearer " + res.data.token;
               return config;
             })
             navigate("/adminDashboard");
           } else {
-            navigate("/userhome");
+            if (res.data.role === "DEVELOPER") {
+              developerApi.interceptors.request.use((config) => {
+                config.headers.Authorization = "Bearer " + res.data.token;
+                return config;
+              })
+            }
+            else if (res.data.role === "CONTENTDEVELOPER") {
+              contentDeveloperApi.interceptors.request.use((config) => {
+                config.headers.Authorization = "Bearer " + res.data.token;
+                return config;
+              })
+            }
+            navigate("/userDashboard");
           }
+          if (res.data.role)
+            commonApi.interceptors.request.use((config) => {
+              config.headers.Authorization = "Bearer " + res.data.token;
+              return config;
+            })
           toast.remove();
         }, 3000);
       })
@@ -64,8 +87,8 @@ export const SignIn = () => {
         toast.custom((t) => (
           <div
             className={`bg-[#ff5e5b] text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
               } duration-300 ease-in-out`}>
             <div className="flex items-center gap-2 text-white">
               <span>

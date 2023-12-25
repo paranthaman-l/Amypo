@@ -1,19 +1,31 @@
-import { Button } from '@material-tailwind/react';
+import { Button, Option, Select } from '@material-tailwind/react';
 import React, { useEffect, useRef, useState } from 'react'
 import AddEmployee from '../Employees/AddEmployee';
 import Services from '../../../Api/Services';
 import toast from 'react-hot-toast';
 import EditEmployee from '../Employees/EditEmployee';
+import DeleteEmployee from '../Employees/DeleteEmployee';
 
 export const Addemployeesection = () => {
+  const [role, setRole] = useState();
   const [open, setOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [editData, setEditData] = useState()
+  const [data, setData] = useState()
   const cancelButtonRef = useRef(null)
   const cancelEditButtonRef = useRef(null)
+  const cancelDeleteButtonRef = useRef(null)
   const [employees, setEmployees] = useState([]);
   const getData = async () => {
     await Services.getEmployees().then((response) => {
+      setEmployees(response.data);
+    }).catch((error) => {
+      console.log(error.message);
+    })
+  }
+  const getDataByRole = async () => {
+    await Services.getEmployeesByRole(role).then((response) => {
       setEmployees(response.data);
     }).catch((error) => {
       console.log(error.message);
@@ -23,15 +35,29 @@ export const Addemployeesection = () => {
     getData();
   }, [])
 
+  useEffect(() => {
+    getDataByRole();
+  }, [role])
+
   return (
     <>
       <main className="w-full font-ubuntu h-[40em] mt-3 rounded-md shadow-xl">
         <AddEmployee getData={getData} cancelButtonRef={cancelButtonRef} open={open} setOpen={setOpen} />
-        <EditEmployee getData={getData} cancelButtonRef={cancelEditButtonRef} open={editOpen} setOpen={setEditOpen} data={editData} setData={setEditData}/>
+        <EditEmployee getData={getData} cancelButtonRef={cancelEditButtonRef} open={editOpen} setOpen={setEditOpen} data={editData} setData={setEditData} />
+        <DeleteEmployee getData={getData} cancelButtonRef={cancelDeleteButtonRef} open={deleteOpen} setOpen={setDeleteOpen} data={data} setData={setData} />
         <section className="px-3">
           <div className="flex w-full justify-between">
             <p className='flex items-center text text-[#555555] font-bold'>Employee List</p>
-            <Button onClick={() => setOpen(true)} className='border border-darkgray border-opacity-35 px-3 py-2 rounded-lg bg-green1'>Add New</Button>
+            <div className="flex items-center justify-center ">
+              <Button onClick={() => setOpen(true)} className='border w-60 border-darkgray border-opacity-35 px-3 py-3 mx-2 rounded-lg bg-green1'>Add New Employee</Button>
+              <Select label='Role' value={role || 'All'} className=''>
+                <Option onClick={() => setRole("all")} className=''>All</Option>
+                <Option onClick={() => setRole("contentdeveloper")} className=''>Content Developer</Option>
+                <Option onClick={() => setRole("developer")} className=''>Developer</Option>
+                <Option onClick={() => setRole("trainer")} className=''>Trainer</Option>
+                <Option onClick={() => setRole("bdm")} className=''>BDM</Option>
+              </Select>
+            </div>
           </div>
           <div className="mt-8 ">
             <div className="overflow-x-auto">
@@ -133,10 +159,10 @@ export const Addemployeesection = () => {
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <div className="text-left flex items-center justify-center">
-                            <button onClick={()=>{setEditOpen(true);setEditData(employee)}} className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#6c757d] duration-200 rounded'>
+                            <button onClick={() => { setEditOpen(true); setEditData(employee) }} className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#6c757d] duration-200 rounded'>
                               <i className="fa fa-edit  group-hover:text-white "></i>
                             </button>
-                            <button className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#fc5a69] duration-200 rounded'>
+                            <button onClick={() => { setDeleteOpen(true); setData(employee) }} className='h-8 w-9 mx-1 group flex justify-center items-center hover:bg-[#fc5a69] duration-200 rounded'>
                               <i className="fa-regular fa-trash-can text-[#fc5a69] group-hover:text-white"></i>
                             </button>
                           </div>

@@ -7,9 +7,9 @@ import {
     MenuItem,
     Typography,
 } from "@material-tailwind/react";
-import HROptions from './HROptions'
 import { useStates } from '../../../useContext/UseStates';
-const AdminSideBar = () => {
+import UsersOptions from './UsersOptions';
+const UserSideBar = () => {
     const [options, setOptions] = useState(1);
     const {user} = useStates();
     return (
@@ -54,15 +54,15 @@ const AdminSideBar = () => {
             </div>
             <div className="mt-5 mr-3 px-3 flex flex-col">
                 <ul className='flex justify-evenly w-full items-center cursor-pointer '>
-                    <li onClick={()=>setOptions(1)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===1 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`}>HR</li>
+                    <li onClick={()=>setOptions(1)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===1 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`}>{localStorage.getItem("role")}</li>
                     <li onClick={()=>setOptions(2)} className={`rounded-t-md px-2 w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===2 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`}>Project</li>
-                    <li onClick={()=>setOptions(3)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===3 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`}><i className="fa fa-th-large"></i></li>
-                    <li onClick={()=>setOptions(4)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===4 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`} ><i className="fa fa-cog"></i></li>
+                    {/* <li onClick={()=>setOptions(3)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===3 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`}><i className="fa fa-th-large"></i></li>
+                    <li onClick={()=>setOptions(4)} className={`rounded-t-md w-full text-center h-8 flex justify-center items-center pb-2 border-[1px]  ${options===4 ? "bg-white border-[1px] text-green1 border-[#e9ecef]":"border-none"} pt-2`} ><i className="fa fa-cog"></i></li> */}
                 </ul>
                 <hr className='text-textgray text-opacity-10' />
             </div>
             <div className="mt-5 flex flex-col">
-                {options === 1 ? <HROptions/> :
+                {options === 1 ? <UsersOptions/> :
                     options === 2 ? ("") :
                         options === 3 ? ("") :
                             options === 4 ? ("") :
@@ -72,4 +72,4 @@ const AdminSideBar = () => {
     )
 }
 
-export default AdminSideBar
+export default UserSideBar

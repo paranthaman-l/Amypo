@@ -4,16 +4,15 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Button } from '@material-tailwind/react/'
 import Services from '../../../Api/Services';
 import toast, { Toaster } from 'react-hot-toast';
-const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
-    const [formData, setFormData] = useState();
+const EditLeave = ({ open, setOpen, cancelButtonRef, getData,data,setData }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value })
+        setData({ ...data, [name]: value })
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        Services.ApplyLeave(formData).then((response) => {
+        Services.UpdateLeave(data).then((response) => {
             toast.custom((t) => (
                 <div
                     className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
@@ -25,7 +24,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                             <i className="fa-solid fa-circle-check"></i>
                         </span>
                         <div>
-                            <span className="">Leave Apply successFull !</span>
+                            <span className="">Leave Update successFull !</span>
                         </div>
                     </div>
                 </div>
@@ -103,7 +102,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                         </div> */}
                                         <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                             <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                                Add Leave
+                                                Update Leave
                                             </Dialog.Title>
                                             <hr className='text-[#f0f0f0] py-2' />
                                             <div className="-mx-3 md:flex mb-6">
@@ -111,13 +110,13 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dateFrom">
                                                         From Date :
                                                     </label>
-                                                    <input name='dateFrom' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="dateFrom" type="date" placeholder="" />
+                                                    <input value={data?.dateFrom?.substring(0,10)} name='dateFrom' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="dateFrom" type="date" placeholder="" />
                                                 </div>
                                                 <div className="md:w-1/2 px-3">
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dateTo">
                                                         To Date :
                                                     </label>
-                                                    <input name='dateTo' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dateTo" type="date" placeholder="Doe" />
+                                                    <input value={data?.dateTo?.substring(0,10)} name='dateTo' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dateTo" type="date" placeholder="Doe" />
                                                 </div>
                                             </div>
                                             {/* <div className="md:w-full mb-5">
@@ -141,7 +140,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value="Paid" className="peer hidden" name="leaveType" />
+                                                        <input checked={"Paid"===data?.leaveType} onChange={handleChange} type="radio" value="Paid" className="peer hidden" name="leaveType" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Paid</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -151,7 +150,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     </label>
 
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value="Un Paid" className="peer hidden" name="leaveType" />
+                                                        <input checked={"Un Paid"===data?.leaveType}  onChange={handleChange} type="radio" value="Un Paid" className="peer hidden" name="leaveType" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Un Paid</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -167,7 +166,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value="Full Day" className="peer hidden" name="leaveDuration" />
+                                                        <input checked={"Full Day"===data?.leaveDuration}  onChange={handleChange} type="radio" value="Full Day" className="peer hidden" name="leaveDuration" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Full Day</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -177,7 +176,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     </label>
 
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value="Half Day" className="peer hidden" name="leaveDuration" />
+                                                        <input checked={"Half Day"===data?.leaveDuration} onChange={handleChange} type="radio" value="Half Day" className="peer hidden" name="leaveDuration" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Half Day</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -192,7 +191,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="reason">
                                                         Reason :
                                                     </label>
-                                                    <textarea onChange={handleChange} name='reason' rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="reason" type="text" placeholder="Vacation..." />
+                                                    <textarea value={data?.reason} onChange={handleChange} name='reason' rows={1} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4 mb-3" id="reason" type="text" placeholder="Vacation..." />
                                                 </div>
                                             </div>
 
@@ -204,7 +203,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                             className="inline-flex w-full justify-center rounded-md bg-green1  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                             onClick={handleSubmit}
                                         >
-                                            Add Leave
+                                            Update Leave
                                         </Button>
                                         <Button
                                             type="button"
@@ -225,4 +224,4 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
     )
 }
 
-export default AddLeave
+export default EditLeave

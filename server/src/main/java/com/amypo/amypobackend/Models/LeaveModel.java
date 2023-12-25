@@ -5,9 +5,11 @@ import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -37,6 +39,7 @@ public class LeaveModel {
     private String name;
     private String email;
     private String profile;
+    private String empId;
     private String status;
 
     @CreatedDate
@@ -44,10 +47,10 @@ public class LeaveModel {
     @Column(nullable = false, updatable = false)
     private Date createdAt;
 
-    
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
+        status = "yettoapprove";
     }
 
     // @Autowired

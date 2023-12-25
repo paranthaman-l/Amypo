@@ -1,8 +1,7 @@
-import React from 'react'
-import AdminNavbar from '../../Navbar/AdminNavbar'
-import AdminSideBar from '../SideBar/AdminSideBar'
-import Header from '../Header'
-import LeaveRequestTable from './LeaveRequestTable'
+import AdminNavbar from '../../../Components/Navbar/AdminNavbar'
+import AdminSideBar from '../../../Components/Admincomponents/SideBar/AdminSideBar'
+import Header from '../../../Components/Admincomponents/Header'
+import LeaveRequestTable from '../../../Components/Admincomponents/Employees/LeaveRequestTable'
 
 const LeaveRequests = () => {
   return (

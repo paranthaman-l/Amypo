@@ -8,4 +8,5 @@ public class Api {
     public static final String DEVELOPER = "/developer";
     public static final String CONTENTDEVELOPER = "/contentdeveloper";
     public static final String BDM = "/bmd";
+    public static final String COMMON = "/common";
 }

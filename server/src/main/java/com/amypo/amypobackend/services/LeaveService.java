@@ -2,22 +2,36 @@ package com.amypo.amypobackend.services;
 
 import java.util.List;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amypo.amypobackend.Models.LeaveModel;
+import com.amypo.amypobackend.Models.UserDetailsModel;
 import com.amypo.amypobackend.Repository.LeaveRepository;
+import com.amypo.amypobackend.Repository.UserRepository;
 
 @Service
 public class LeaveService {
     @Autowired
     private LeaveRepository leaveRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public LeaveModel postleave(LeaveModel lm) {
-
-        return leaveRepository.save(lm);
+    public LeaveModel postleave(LeaveModel lm,UserDetailsModel userDetailsModel)
+    {
+        lm.setEmail(userDetailsModel.getEmail());
+        lm.setName(userDetailsModel.getName());
+        lm.setProfile(userDetailsModel.getProfile());
+        lm.setEmpId(userDetailsModel.getEmpId());
+        leaveRepository.save(lm);
+        List<LeaveModel> leaveModels =  userDetailsModel.getLeaveData();
+        leaveModels.add(lm);
+        userDetailsModel.setLeaveData(leaveModels);
+        userRepository.save(userDetailsModel);
+        return lm;
     }
 
     public List<LeaveModel> getleave() {
@@ -72,5 +86,20 @@ public class LeaveService {
 
         // Check if the total exceeds 1 day
         return totalPaidLeaveDaysInMonth + numberofdays > 1;
+    }
+
+    public List<LeaveModel> getPendingLeaves() {
+        return leaveRepository.findAllByStatus("yettoapprove");
+    }
+
+    public List<LeaveModel> findAllByStatusAndId(String eid, String status) {
+        UserDetailsModel userDetails = userRepository.findById(eid).get();
+        List<LeaveModel> leaveModels = userDetails.getLeaveData();
+        List<LeaveModel> result = new ArrayList<>();
+        for(LeaveModel leaveModel : leaveModels) {
+            if(leaveModel.getStatus().equals(status))
+                result.add(leaveModel);
+        }
+        return result;
     }
 }
