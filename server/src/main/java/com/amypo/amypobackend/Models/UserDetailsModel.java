@@ -61,6 +61,10 @@ public class UserDetailsModel implements UserDetails {
     @JoinColumn(name = "fk_user_id", referencedColumnName = "eid")
     private List<LeaveModel> leaveData;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "eid")
+    private List<Attendance> attendances;
+
     @Column(nullable = false)
     private Boolean isEnabled;
 

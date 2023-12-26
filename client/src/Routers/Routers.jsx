@@ -11,6 +11,8 @@ import LeaveRequests from "../Pages/Admin/Leave/LeaveRequests";
 import UserDashboard from "../Pages/User/UserDashboard";
 import LeaveApply from "../Pages/User/LeaveApply";
 import Attendance from '../Pages/Admin/Attendance'
+import Payslip from "../Pages/Admin/Payslip";
+import Profile from "../Pages/Profile";
 export const Routers = () => {
   return (
     <>
@@ -26,6 +28,7 @@ export const Routers = () => {
             <Route path="/" element={<UserHome />} />
             <Route path="/userDashboard" element={<UserDashboard />} />
             <Route path="/applyLeave" element={<LeaveApply />} />
+            <Route path="/userProfile" element={<Profile />} />
           </Route>
 
           {/* adminroutes  */}
@@ -37,6 +40,8 @@ export const Routers = () => {
             <Route path="/allEmployees" element={<AllEmployees />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/leaveRequests" element={<LeaveRequests />} />
+            <Route path="/payslip" element={<Payslip />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </BrowserRouter>

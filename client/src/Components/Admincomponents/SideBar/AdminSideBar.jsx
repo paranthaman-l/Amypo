@@ -9,7 +9,9 @@ import {
 } from "@material-tailwind/react";
 import HROptions from './HROptions'
 import { useStates } from '../../../useContext/UseStates';
+import { useNavigate } from 'react-router-dom';
 const AdminSideBar = () => {
+    const navigate = useNavigate()
     const [options, setOptions] = useState(1);
     const {user} = useStates();
     return (
@@ -26,7 +28,7 @@ const AdminSideBar = () => {
                                 </Typography>
                             </MenuHandler>
                             <MenuList className='' >
-                                <MenuItem><i className="fa fa-user me-2"></i>My Profile</MenuItem>
+                                <MenuItem onClick={()=>navigate("/profile")}><i className="fa fa-user me-2"></i>My Profile</MenuItem>
                                 <MenuItem><i className="fa fa-envelope-open me-2"></i>Messages</MenuItem>
                                 <MenuItem><i className="fa fa-cog me-2"></i>Settings</MenuItem>
                                 <MenuItem><i className="fa fa-power-off me-2"></i>Logout</MenuItem>

@@ -6,7 +6,7 @@ import { Button } from '@material-tailwind/react/'
 import Selector from '../../Selection'
 import Services from '../../../Api/Services'
 import toast, { Toaster } from "react-hot-toast";
-const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData}) => {
+const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData, getData }) => {
     const datas = [
         {
             label: "Trainer",
@@ -63,9 +63,12 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
     const [profile, setProfile] = useState("");
     const [role, setRole] = useState(data?.role);
     const [bloodGroup, setBloodGroup] = useState(data?.bloodGroup);
+    console.log(data);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
+        if (name === "maritalStatus")
+            setData({ ...data, [name]: JSON.parse(value) });
     }
     useEffect(() => {
         setData({ ...data, "role": role })
@@ -83,25 +86,25 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
         Services.EditEmployee(data).then((response) => {
             toast.custom((t) => (
                 <div
-                  className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                    } duration-300 ease-in-out`}>
-                  <div className="flex items-center gap-2 text-white">
-                    <span>
-                      <i className="fa-solid fa-circle-check"></i>
-                    </span>
-                    <div>
-                      <span className="">Update successFull!</span>
+                    className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-4"
+                        } duration-300 ease-in-out`}>
+                    <div className="flex items-center gap-2 text-white">
+                        <span>
+                            <i className="fa-solid fa-circle-check"></i>
+                        </span>
+                        <div>
+                            <span className="">Update successFull!</span>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              ));
-              setTimeout(() => {
-                    getData();
-                    setOpen(false);
-                    toast.remove();
-              }, 1500);
+            ));
+            setTimeout(() => {
+                getData();
+                setOpen(false);
+                toast.remove();
+            }, 1500);
         }).catch((error) => {
             console.log(error);
             toast.custom((t) => (
@@ -125,7 +128,7 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
         })
         setTimeout(() => {
             toast.remove();
-      }, 1500);
+        }, 1500);
     }
     return (
         <Transition.Root show={open} as={Fragment} >
@@ -223,7 +226,7 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
                                                     <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" htmlFor="dob">
                                                         DOB :
                                                     </label>
-                                                    <input value={data?.dob?.substring(0,10)} name='dob' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dob" type="date" placeholder="DOB" />
+                                                    <input value={data?.dob?.substring(0, 10)} name='dob' onChange={handleChange} className="appearance-none block w-full bg-gray text-grey-darker border border-gray rounded py-3 px-4" id="dob" type="date" placeholder="DOB" />
                                                 </div>
                                             </div>
                                             <div className="-mx-3 md:flex mb-6 mt-12">
@@ -273,7 +276,7 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input checked={data?.name} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
+                                                        <input checked={data?.maritalStatus} value={true} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Married</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
@@ -283,7 +286,7 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData ,getData})
                                                     </label>
 
                                                     <label>
-                                                        <input checked={data?.name} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
+                                                        <input checked={!data?.maritalStatus} value={false} onChange={handleChange} type="radio" className="peer hidden" name="maritalStatus" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Un Married</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">

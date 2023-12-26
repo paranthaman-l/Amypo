@@ -80,7 +80,19 @@ const HROptions = () => {
       label: "Payroll",
       value: "payroll",
       link: "/payroll",
-      icon: "fa fa-credit-card"
+      icon: "fa fa-credit-card",
+      list: [
+        {
+          label: "PaySlip",
+          value: "payslip",
+          link: "/payslip",
+        },
+        {
+          label: "Employee Salary",
+          value: "employeeSalary",
+          link: "/employeeSalary",
+        },
+      ]
     },
     {
       label: "Report",
@@ -122,7 +134,7 @@ const HROptions = () => {
             <ul className=''>
               {item?.list.map((it, i) => {
                 return (
-                  <li key={i} onClick={() => { navigate(it.link) }}className={`${pathname === it.link && "bg-green1 text-white "} px-5 py-1  duration-300 rounded-r-md hover:bg-green1 hover:text-white cursor-pointer`}>
+                  <li key={i} onClick={() => { navigate(it.link) }} className={`${pathname === it.link && "bg-green1 text-white "} px-5 py-1  duration-300 rounded-r-md hover:bg-green1 hover:text-white cursor-pointer`}>
                     <span className='text-darkgray font-thin mx-3'>--  </span>{it.label}
                   </li>
                 )
