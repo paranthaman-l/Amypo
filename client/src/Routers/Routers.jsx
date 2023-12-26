@@ -10,7 +10,7 @@ import AllEmployees from "../Pages/Admin/AddEmployee/AllEmployees";
 import LeaveRequests from "../Pages/Admin/Leave/LeaveRequests";
 import UserDashboard from "../Pages/User/UserDashboard";
 import LeaveApply from "../Pages/User/LeaveApply";
-
+import Attendance from '../Pages/Admin/Attendance'
 export const Routers = () => {
   return (
     <>
@@ -35,6 +35,7 @@ export const Routers = () => {
             <Route path="/" element={<AdminHome />} />
             <Route path="/adminDashboard" element={<Dashboardsection />} />
             <Route path="/allEmployees" element={<AllEmployees />} />
+            <Route path="/attendance" element={<Attendance />} />
             <Route path="/leaveRequests" element={<LeaveRequests />} />
           </Route>
         </Routes>

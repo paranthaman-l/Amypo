@@ -141,7 +141,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                                                 </label>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
                                                     <label>
-                                                        <input onChange={handleChange} type="radio" value="Pain" className="peer hidden" name="leaveType" />
+                                                        <input onChange={handleChange} type="radio" value="Paid" className="peer hidden" name="leaveType" />
                                                         <div className="hover:bg-gray-50 flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-200 group peer-checked:border-blue-500">
                                                             <h2 className="font-medium text-gray-700">Paid</h2>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
