@@ -138,7 +138,7 @@ export const Addemployeesection = () => {
                         </td>
                         <td className="p-2 whitespace-nowrap py-4">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 flex-shrink-0 mr-5 sm:mr-3"><img className="rounded-full" src="https://wrraptheme.com/templates/lucid/hr/bs5/dist/assets/images/user.png" width="40" height="40" alt="Alex Shatov" /></div>
+                            <div className="w-10 h-10 flex-shrink-0 mr-5 sm:mr-3"><img className="rounded-full" src={employee?.profile} width="40" height="40" alt="Alex Shatov" /></div>
                             <div className="font-medium text-gray-800">
                               <p className='font-bold'>{employee?.name}</p>
                               <p className='text-sm  text-darkgray2'>{employee?.email}</p>

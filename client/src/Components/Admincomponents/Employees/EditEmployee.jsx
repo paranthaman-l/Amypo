@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Button } from '@material-tailwind/react/'
+import ImageCompressor from "image-compressor.js";
 import Selector from '../../Selection'
 import Services from '../../../Api/Services'
 import toast, { Toaster } from "react-hot-toast";
@@ -60,10 +61,9 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData, getData }
         },
     ]
     const profileRef = useRef(null);
-    const [profile, setProfile] = useState("");
+    const [profile, setProfile] = useState(data?.profile);
     const [role, setRole] = useState(data?.role);
     const [bloodGroup, setBloodGroup] = useState(data?.bloodGroup);
-    console.log(data);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
@@ -76,11 +76,84 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData, getData }
     useEffect(() => {
         setData({ ...data, "bloodGroup": bloodGroup })
     }, [bloodGroup])
-    const handleProfileChange = (e) => {
+
+    const handleProfileChange = async (e) => {
         e.preventDefault();
-        // setData({...data, "profile": e.target.files[0]});
-        setProfile(e.target.files[0])
-    }
+        const selectedImage = e.target.files[0];
+        setProfile(selectedImage);
+        if (selectedImage) {
+            const compressedImage = await compressImage(selectedImage);
+            const imageData = new FormData();
+            imageData.append("file", compressedImage);
+            imageData.append("upload_preset", "t516gx5k");
+            try {
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/dalynypf0/image/upload`,
+                    {
+                        method: "POST",
+                        body: imageData,
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const imagedata = await response.json();
+                setData({ ...data, profile: imagedata.secure_url });
+                console.log(imagedata.secure_url);
+
+                toast.custom((t) => (
+                    <div
+                        className={`bg-toastGreen text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                            } duration-300 ease-in-out`}>
+                        <div className="flex items-center gap-2 text-white">
+                            <span>
+                                <i className="fa-solid fa-circle-check"></i>
+                            </span>
+                            <div>
+                                <span className="">Image updated successfully !</span>
+                            </div>
+                        </div>
+                    </div>
+                ));
+                console.log(data);
+            } catch (error) {
+                console.error("Error uploading image to Cloudinary:", error);
+                toast.custom((t) => (
+                    <div
+                        className={`bg-[#ff5e5b] text-white px-6 py-5 shadow-xl rounded-xl transition-all  ${t.visible
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-4"
+                            } duration-300 ease-in-out`}>
+                        <div className="flex items-center gap-2 text-white">
+                            <span>
+                                <i className="fa-solid text-xl fa-circle-xmark"></i>
+                            </span>
+                            <div>
+                                <span className="">Error updating image</span>
+                            </div>
+                        </div>
+                    </div>
+                ));
+            }
+        }
+    };
+
+    const compressImage = async (image) => {
+        return new Promise((resolve, reject) => {
+            new ImageCompressor(image, {
+                quality: 0.1,
+                success(result) {
+                    resolve(result);
+                },
+                error(error) {
+                    reject(error);
+                },
+            });
+        });
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         Services.EditEmployee(data).then((response) => {
@@ -259,12 +332,25 @@ const EditEmployee = ({ open, setOpen, cancelButtonRef, data, setData, getData }
                                                         Profile :
                                                     </label>
                                                     <span className='flex items-center'>
-                                                        {profile ? <img className="h-16 w-16 text-gray-300 rounded-full" src={URL.createObjectURL(profile)} alt="" /> :
-                                                            <svg className="h-16 w-16 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                                                <path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clipRule="evenodd"></path>
+                                                        {data?.profile ? (
+                                                            <img
+                                                                className="h-16 w-16 text-gray-300 rounded-full"
+                                                                src={data?.profile}
+                                                                alt=""
+                                                            />
+                                                        ) : (
+                                                            <svg
+                                                                className="h-16 w-16 text-gray-300"
+                                                                viewBox="0 0 24 24"
+                                                                fill="currentColor"
+                                                                aria-hidden="true">
+                                                                <path
+                                                                    fillRule="evenodd"
+                                                                    d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                                                                    clipRule="evenodd"></path>
                                                             </svg>
-                                                        }
-                                                        <input value={data?.profile} name='profile' onChange={handleProfileChange} type="file" accept='image/*' ref={profileRef} className='' style={{ display: "none" }} id="profile" />
+                                                        )}
+                                                        <input  name='profile' onChange={handleProfileChange} type="file" accept='image/*' ref={profileRef} className='' style={{ display: "none" }} id="profile" />
                                                         <Button onClick={() => profileRef.current.click()} className='bg-green1 text-white mx-5 shadow-lg'>Upload</Button>
                                                     </span>
 

@@ -104,73 +104,54 @@ export const SignIn = () => {
   };
   return (
     <>
-      <main>
-        <section className="flex lg:flex-col    xl:h-[39rem] font-poppins xl:mx-10 xl:my-5 rounded-xl shadow-xl items-start">
-          <div className=" rounded-l-xl h-full signin   xl:w-[50em] lg:w-full">
-            <div className="flex flex-col gap-12 items-center ">
-              <figure className="mt-8 flex font-poppins flex-col items-center gap-7">
-                <div className="flex  items-center text-3xl font-bold">
-                  <img className="w-12" src={logo} alt="" />
-                  <span className="font-extrabold">mypo</span>
-                </div>
+      <main className=" h-screen">
+        <section className="xl:bg-loginimage shadow  font-ubuntu fixed w-screen  h-screen bg-cover bg-no-repeat">
+          <div className="flex  absolute right-0 lg:w-full   h-full">
+            <div className="bg-green-500 lg:w-full   xl:w-[24em]   ">
+              <div className=" flex h-full justify-center">
+                <div className="xl:m-14  lg:w-full  justify-center xl:flex   xl:flex-col relative xl:right-36 gap-6  items-start">
+                  <div className="flex lg:hidden  items-center gap-3 relative "></div>
+                  <form onSubmit={handleLogin} className="bg-white z-10 shadow-2xl  rounded-md  lg:w-full xl:w-[28rem] h-full     p-8 ">
+                    <div className="flex flex-col gap-7 ">
+                      <div className="flex  w-24 my-3 items-center">
+                        <img className="w-full" src={logo} />
+                      </div>
+                      <p className="text-xl">Login to your account</p>
+                      <div className="flex flex-col gap-3">
+                        <input
+                          placeholder="Email address"
 
-                <div className="font-bold font-poppins text-black text-3xl text-center w-[12em]  leading-[40px]">
-                  <p>Discover Amypo with great build tools</p>
+                          type="email"
+                          name="email"
+                          id="email"
+                          onChange={handleInputchange}
+                          className="p-4 border-lightgray1 border focus:outline-none focus:border focus:border-light-green-700 rounded-md"
+                        />
+                        <input
+                          placeholder="Password"
+                          type="password"
+                          id="password"
+                          name="password"
+                          onChange={handleInputchange}
+                          className="p-4 border-lightgray1 border focus:outline-none focus:border focus:border-light-green-700 rounded-md"
+                        />
+                      </div>
+                      <div className="flex gap-3 text-lightgray items-center">
+                        <input className="rounded-md" type="checkbox" />
+                        <span>Remember me</span>
+                      </div>
+                      <button className="bg-green-500 p-3 text-white rounded-md">
+                        Login
+                      </button>
+                      <div className="text-green-400 flex gap-2 items-center">
+                        <span>
+                          <i className="fa-solid text-sm fa-lock"></i>
+                        </span>
+                        <span>Forgot password?</span>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </figure>
-
-              <figure>
-                <img className="h-[23em] bg-cover" src={login} alt="" />
-              </figure>
-            </div>
-          </div>
-          <div className="xl:w-[48em] lg:p-5 h-full">
-            <div className="flex flex-col py-32     font-poppins items-center ">
-              <div className="flex flex-col gap-2.5">
-                <div className="flex flex-col gap-3">
-                  <p className="font-bold text-4xl">Welcome to Amypo</p>
-                  <p className="flex items-center gap-2 ">
-                    <span className="text-[#99a1b7]">New here?</span>
-                    <button
-                      onClick={() => navigate("/signup")}
-                      className="text-[#20d489] font-bold">
-                      Create Account
-                    </button>
-                  </p>
-                </div>
-                <form
-                  onSubmit={handleLogin}
-                  className="flex flex-col w-full gap-8">
-                  <div className="flex flex-col gap-3 items-start">
-                    <label className="font-bold " htmlFor="email">
-                      Email
-                    </label>
-                    <input
-                      className="bg-[#f9f9f9] focus:outline-none focus:border focus:border-brightgreen w-[24em] text-black px-3.5 py-2.5 text-lg fon rounded-lg "
-                      type="text"
-                      name="email"
-                      id="email"
-                      onChange={handleInputchange}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-3 items-start">
-                    <label className="font-bold " htmlFor="email">
-                      Password
-                    </label>
-                    <input
-                      onChange={handleInputchange}
-                      name="password"
-                      id="password"
-                      type="password"
-                      className="bg-[#f9f9f9] focus:outline-none focus:border focus:border-brightgreen w-[24em] text-black px-3.5 py-2.5 text-lg rounded-lg "
-                    />
-                  </div>
-                  <div>
-                    <button type="submit" className="bg-[#2f8d46] p-3 font-bold text-white px-8 text-sm rounded-lg">
-                      Sign In
-                    </button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>
