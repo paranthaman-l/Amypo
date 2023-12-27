@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import login from "../../assets/logo/bg.png";
 import "../../Styles/App.css"
 import Services from '../../Api/Services'
-import { adminApi, commonApi, contentDeveloperApi, developerApi } from "../../Api/axios";
+import { adminApi, bdmApi, commonApi, contentDeveloperApi, developerApi, trainerApi } from "../../Api/axios";
 import { useStates } from '../../useContext/UseStates'
 export const SignIn = () => {
   const { user, setUser } = useStates();
@@ -52,6 +52,11 @@ export const SignIn = () => {
             </div>
           </div>
         ));
+        if (res.data.role)
+          commonApi.interceptors.request.use((config) => {
+            config.headers.Authorization = "Bearer " + res.data.token;
+            return config;
+          })
         setTimeout(() => {
           if (res.data.role === "ADMIN") {
             adminApi.interceptors.request.use((config) => {
@@ -72,13 +77,20 @@ export const SignIn = () => {
                 return config;
               })
             }
+            else if (res.data.role === "TRAINER") {
+              trainerApi.interceptors.request.use((config) => {
+                config.headers.Authorization = "Bearer " + res.data.token;
+                return config;
+              })
+            }
+            else if (res.data.role === "BDM") {
+              bdmApi.interceptors.request.use((config) => {
+                config.headers.Authorization = "Bearer " + res.data.token;
+                return config;
+              })
+            }
             navigate("/userDashboard");
           }
-          if (res.data.role)
-            commonApi.interceptors.request.use((config) => {
-              config.headers.Authorization = "Bearer " + res.data.token;
-              return config;
-            })
           toast.remove();
         }, 3000);
       })

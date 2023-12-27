@@ -12,9 +12,15 @@ const developerApi = axios.create({
 const contentDeveloperApi = axios.create({
     baseURL:import.meta.env.VITE_APP_CONTENTDEVELOPER_BASE_URL
 })
+const trainerApi = axios.create({
+    baseURL:import.meta.env.VITE_APP_TRAINER_BASE_URL
+})
+const bdmApi = axios.create({
+    baseURL:import.meta.env.VITE_APP_BDM_BASE_URL
+})
 
 const commonApi = axios.create({
     baseURL:import.meta.env.VITE_APP_COMMONAPI_BASE_URL
 })
 
-export {authApi,adminApi,developerApi,contentDeveloperApi,commonApi}
+export {authApi,adminApi,developerApi,contentDeveloperApi,commonApi,trainerApi,bdmApi}

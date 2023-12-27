@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Routers } from "./Routers/Routers";
-import { adminApi, commonApi, contentDeveloperApi, developerApi } from "./Api/axios";
+import { adminApi, bdmApi, commonApi, contentDeveloperApi, developerApi, trainerApi } from "./Api/axios";
 import { useStates } from "./useContext/UseStates";
 import Services from "./Api/Services";
 
@@ -26,13 +26,13 @@ const App = () => {
       })
     }
     else if (localStorage.getItem("role") === "TRAINER") {
-      contentDeveloperApi.interceptors.request.use((config) => {
+      trainerApi.interceptors.request.use((config) => {
         config.headers.Authorization = "Bearer " + localStorage.getItem("token");
         return config;
       })
     }
     else if (localStorage.getItem("role") === "BDM") {
-      contentDeveloperApi.interceptors.request.use((config) => {
+      bdmApi.interceptors.request.use((config) => {
         config.headers.Authorization = "Bearer " + localStorage.getItem("token");
         return config;
       })
