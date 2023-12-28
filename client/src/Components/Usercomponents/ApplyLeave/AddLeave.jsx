@@ -25,7 +25,7 @@ const AddLeave = ({ open, setOpen, cancelButtonRef, getData }) => {
                             <i className="fa-solid fa-circle-check"></i>
                         </span>
                         <div>
-                            <span className="">Leave Apply successFull !</span>
+                            <span className="">{response?.data} !</span>
                         </div>
                     </div>
                 </div>

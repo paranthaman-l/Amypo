@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserHome } from "../Pages/User/UserHome";
 import { Adminroutes } from "../Privateroutes/Adminroutes/Adminroutes";

@@ -24,8 +24,8 @@ import com.amypo.amypobackend.constant.Api;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping({Api.ADMIN,Api.TRAINER,Api.DEVELOPER,Api.CONTENTDEVELOPER,Api.BDM,Api.COMMON})
-public class LeaveController{
+@RequestMapping({ Api.ADMIN, Api.TRAINER, Api.DEVELOPER, Api.CONTENTDEVELOPER, Api.BDM, Api.COMMON })
+public class LeaveController {
 
     @Autowired
     public LeaveService ls;
@@ -34,38 +34,47 @@ public class LeaveController{
     private UserService us;
 
     @PostMapping("/postleave")
-    public String postleave(@RequestBody LeaveModel lm,@RequestParam String eid){
+    public String postleave(@RequestBody LeaveModel lm, @RequestParam String eid) {
         UserDetailsModel user = us.getUserById(eid);
         List<LeaveModel> leaves = user.getLeaveData();
         Date startdate = lm.getDateFrom();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate sdate = startdate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
-        for(LeaveModel l : leaves){
-                if(l.getEmail() == user.getEmail() && l.getStatus() == "approved"){
-                    Date enddate = l.getDateTo();
-                    LocalDate edate = enddate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
-                    int comparisonResult = sdate.compareTo(edate);
-                    if (comparisonResult < 0) {
-                        return "You are on leave already on this period";
-                    }
+        System.out.println(sdate);
+        for (LeaveModel l : leaves) {
+            if (l.getEmail().equals(user.getEmail()) && l.getStatus().equals("approved")) {
+                Date enddate = l.getDateTo();
+                LocalDate edate = enddate.toInstant().atZone(sdf.getTimeZone().toZoneId()).toLocalDate();
+                int comparisonResult = sdate.compareTo(edate);
+                System.out.println(comparisonResult);
+                if (comparisonResult < 0) {
+                    return "You are on leave already on this period";
                 }
             }
-        ls.postleave(lm,user);
+        }
+        if(lm.getLeaveType().equalsIgnoreCase("Paid")){
+            for(LeaveModel l : leaves){
+                if(l.getDateFrom().toString().substring(0,8).equalsIgnoreCase(sdate.toString().substring(0, 8)) && "Paid".equals(l.getLeaveType())){
+                    return "Monthly Once Only take Paid Leave";
+                }
+            }
+        }
+        ls.postleave(lm, user);
         return "Leave applied successfully";
     }
 
     @DeleteMapping("/deleteleave")
-    public String delleave(@RequestParam String lid){
-    return ls.deleteleave(lid);
+    public String delleave(@RequestParam String lid) {
+        return ls.deleteleave(lid);
     }
 
     @PutMapping("/editleave")
-    public LeaveModel updateleave(@RequestBody LeaveModel lm,@RequestParam String lid){
-    return ls.editleave(lm,lid);
+    public LeaveModel updateleave(@RequestBody LeaveModel lm, @RequestParam String lid) {
+        return ls.editleave(lm, lid);
     }
 
     @GetMapping("/getDataByStatusInUser")
-    public List<LeaveModel> getDataByStatusInUser(@RequestParam String eid,@RequestParam String status){
-        return ls.findAllByStatusAndId(eid,status);
+    public List<LeaveModel> getDataByStatusInUser(@RequestParam String eid, @RequestParam String status) {
+        return ls.findAllByStatusAndId(eid, status);
     }
 }

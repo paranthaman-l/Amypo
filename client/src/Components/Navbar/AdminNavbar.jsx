@@ -49,7 +49,7 @@ const AdminNavbar = () => {
         }, 2000);
     }
     return (
-        <div className='bg-white fixed w-full px-5 h-16 flex justify-between items-center shadow-lg'>
+        <div className='bg-white fixed w-full px-5 h-16 flex justify-between items-center shadow-lg z-20'>
             <Toaster
                 position="top-right"
                 autoClose={5000}

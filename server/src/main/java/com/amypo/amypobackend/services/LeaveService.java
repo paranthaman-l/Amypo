@@ -20,14 +20,13 @@ public class LeaveService {
     @Autowired
     private UserRepository userRepository;
 
-    public LeaveModel postleave(LeaveModel lm,UserDetailsModel userDetailsModel)
-    {
+    public LeaveModel postleave(LeaveModel lm, UserDetailsModel userDetailsModel) {
         lm.setEmail(userDetailsModel.getEmail());
         lm.setName(userDetailsModel.getName());
         lm.setProfile(userDetailsModel.getProfile());
         lm.setEmpId(userDetailsModel.getEmpId());
         leaveRepository.save(lm);
-        List<LeaveModel> leaveModels =  userDetailsModel.getLeaveData();
+        List<LeaveModel> leaveModels = userDetailsModel.getLeaveData();
         leaveModels.add(lm);
         userDetailsModel.setLeaveData(leaveModels);
         userRepository.save(userDetailsModel);
@@ -48,25 +47,25 @@ public class LeaveService {
         return "Leave deleted";
     }
 
-    public String approveLeave(String id){
+    public String approveLeave(String id) {
         LeaveModel leave = leaveRepository.findById(id).get();
         leave.setStatus("approved");
         leaveRepository.save(leave);
         return "leave approved";
     }
 
-    public String declineLeave(String id){
+    public String declineLeave(String id) {
         LeaveModel leave = leaveRepository.findById(id).get();
         leave.setStatus("declined");
         leaveRepository.save(leave);
         return "leave declined";
     }
 
-    public List<LeaveModel> findAllMyStatus(String status){
+    public List<LeaveModel> findAllMyStatus(String status) {
         return leaveRepository.findAllByStatus(status);
     }
 
-    public boolean isMoreThanOnePaidLeaveInMonth(Date startDate,int numberofdays) {
+    public boolean isMoreThanOnePaidLeaveInMonth(Date startDate, int numberofdays) {
         // Calculate the start and end dates of the month for the given date
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
@@ -77,7 +76,8 @@ public class LeaveService {
         Date monthEndDate = calendar.getTime();
 
         // Fetch existing paid leave records for the given month
-        List<LeaveModel> paidLeaveRecords = leaveRepository.findByLeaveTypeAndCreatedAtBetween("PAID", monthStartDate, monthEndDate);
+        List<LeaveModel> paidLeaveRecords = leaveRepository.findByLeaveTypeAndCreatedAtBetween("Paid", monthStartDate,
+                monthEndDate);
 
         // Count the number of days in the fetched records
         int totalPaidLeaveDaysInMonth = paidLeaveRecords.stream()
@@ -96,8 +96,8 @@ public class LeaveService {
         UserDetailsModel userDetails = userRepository.findById(eid).get();
         List<LeaveModel> leaveModels = userDetails.getLeaveData();
         List<LeaveModel> result = new ArrayList<>();
-        for(LeaveModel leaveModel : leaveModels) {
-            if(leaveModel.getStatus().equals(status))
+        for (LeaveModel leaveModel : leaveModels) {
+            if (leaveModel.getStatus().equals(status))
                 result.add(leaveModel);
         }
         return result;

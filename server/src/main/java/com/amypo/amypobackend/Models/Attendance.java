@@ -24,8 +24,14 @@ public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String aid;
-    private Date date;
-    private LocalDateTime checkInDateTime;
-    private LocalDateTime checkOutDateTime;
-    private Boolean isPresent;
+    private String uid;
+    private String empId;
+    private String name;
+    private String profile;
+    private String email;
+    private String date;
+    // private LocalDateTime checkInDateTime;
+    // private LocalDateTime checkOutDateTime;
+    // private String workingHours;
+    private String isPresent;
 }

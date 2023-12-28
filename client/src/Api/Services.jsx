@@ -56,6 +56,21 @@ class Services{
     deleteLeave(lid){
         return commonApi.delete("/deleteleave",{params:{lid}});
     }
+
+    getTodayAttendance(){
+        return commonApi.get("/getTodayAttendance"); 
+    }
+
+    markAttendance(attendance){
+        return commonApi.post("/markAttendance",attendance);
+    }
+
+    getDayAttendance(date){
+        return commonApi.get("/getDayAttendance",{params:{date}});
+    }
+    makeAttendance(date){
+        return commonApi.post("/makeAttendance",{},{params:{date}});
+    }
 }
 
 export default new Services();
