@@ -2,8 +2,12 @@ package com.amypo.amypobackend.services;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +49,16 @@ public class AttendanceService {
                     .build();
 
             List<Attendance> attendances = user.getAttendances();
-
+            Boolean flag = false;
+            for (Attendance attend : attendances) {
+                if (attend.getDate().equals(date)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag) {
+                continue;
+            }
             if (attendances.isEmpty()) {
                 attendances = new ArrayList<>();
             }
@@ -86,7 +99,16 @@ public class AttendanceService {
                     .build();
 
             List<Attendance> attendances = user.getAttendances();
-
+            Boolean flag = false;
+            for (Attendance attend : attendances) {
+                if (attend.getDate().equals(date)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag) {
+                continue;
+            }
             if (attendances.isEmpty()) {
                 attendances = new ArrayList<>();
             }
@@ -102,75 +124,75 @@ public class AttendanceService {
         }
     }
 
-    // public String postAttendance(String uid) {
-    // LocalTime allowedCheckInTime = LocalTime.of(8, 30);
+    public List<Attendance> getDataByDateAndPresent(String date, String isPresent) {
+        if (isPresent.equals("all"))
+            return getDayAttendances(date);
+        return attendanceRepository.findAllByDateAndIsPresent(date, isPresent);
+    }
 
-    // // Check if the current time is greater than 8:30 AM
-    // LocalTime currentTime = LocalTime.now();
-    // String date = Date.valueOf(LocalDate.now()).toString();
-    // if (currentTime.isBefore(allowedCheckInTime)) {
-    // return "Check-in available only after 8:30 AM";
-    // }
-    // UserDetailsModel user = userRepository.findById(uid).orElse(null);
-    // if (user == null) {
-    // return "User not found";
-    // }
+    public Map<String, Integer> getMonthlyAttendanceReport(String month, String year) {
+        List<Attendance> allRecords = (List<Attendance>) attendanceRepository.findAll();
 
-    // List<Attendance> attendances = user.getAttendances();
-    // for (Attendance attendance : attendances) {
-    // if (attendance.getDate().equals(date)) {
-    // return "Already Checked In";
-    // }
-    // }
+        Map<String, Integer> report = new HashMap<>();
 
-    // Attendance attend = new Attendance();
-    // attend.setDate(date);
-    // attend.setCheckInDateTime(LocalDateTime.now());
+        // Calculate start date and end date of the month
+        LocalDate startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
-    // attendances.add(attend);
-    // user.setAttendances(attendances);
-    // userRepository.save(user);
-    // attendanceRepository.save(attend);
-    // return "Check-in Successful";
-    // }
+        // Loop through all records
+        for (Attendance record : allRecords) {
+            // Parse the date and check if it falls within the start and end dates
+            LocalDate recordDate = LocalDate.parse(record.getDate(), DateTimeFormatter.ISO_DATE);
+            if (!recordDate.isBefore(startDate) && !recordDate.isAfter(endDate)) {
+                // Update the report accordingly
+                String employeeName = record.getName(); // Adjust this based on your actual field
+                report.put(employeeName, report.getOrDefault(employeeName, 0) + 1);
+            }
+        }
 
-    // public String checkOut(String uid) {
-    // LocalTime allowedCheckOutTime = LocalTime.of(11, 30);
-    // LocalTime currentTime = LocalTime.now();
-    // if (currentTime.isBefore(allowedCheckOutTime)) {
-    // return "Check-Out available only after 5:30 PM";
-    // }
-    // UserDetailsModel user = userRepository.findById(uid).orElse(null);
-    // if (user == null) {
-    // return "User not found";
-    // }
-    // List<Attendance> attendances = user.getAttendances();
+        return report;
+    }
 
-    // Attendance attend = null;
-    // String date = Date.valueOf(LocalDate.now()).toString();
-    // for (Attendance attendance : attendances) {
-    // if (attendance.getDate().equals(date)) {
-    // attend = attendance;
-    // break;
-    // }
-    // }
-    // if (attend == null)
-    // return "You must have check In First";
+    public List<Map<String, Object>> getReportByDate(LocalDate startDate, LocalDate endDate) {
+        List<UserDetailsModel> users = userRepository.findAll();
+        return users.stream()
+                .map(employee -> {
+                    Map<String, Object> attendanceCount = new HashMap<>();
+                    attendanceCount.put("name", employee.getName());
+                    attendanceCount.put("email", employee.getEmail());
+                    attendanceCount.put("profile", employee.getProfile());
+                    attendanceCount.put("countOfAbsent", 0);
+                    attendanceCount.put("countOfPresent", 0);
+                    attendanceCount.put("countOfLeave", 0);
+                    attendanceCount.put("countOfHalfDay", 0);
 
-    // attend.setCheckOutDateTime(LocalDateTime.now());
-    // LocalDateTime checkInDateTime = attend.getCheckInDateTime();
-    // LocalDateTime checkOutDateTime = attend.getCheckOutDateTime();
+                    employee.getAttendances().forEach(attendance -> {
+                        LocalDate attendanceDate = LocalDate.parse(attendance.getDate());
 
-    // if (checkInDateTime != null) {
-    // Duration duration = Duration.between(checkInDateTime, checkOutDateTime);
-    // long hours = duration.toHours();
-    // long minutes = duration.minusHours(hours).toMinutes();
-    // attend.setWorkingHours(String.valueOf(hours)+":"+minutes);
-    // attendanceRepository.save(attend);
-    // return "Check-Out Successful!\nToday Working Hours is "+hours+":"+minutes;
-    // } else {
-    // return "Check-in information missing";
-    // }
-    // }
+                        if ((attendanceDate.isEqual(startDate) || attendanceDate.isAfter(startDate))
+                                && attendanceDate.isBefore(endDate.plusDays(1))) {
 
+                            String isPresent = attendance.getIsPresent();
+
+                            switch (isPresent) {
+                                case "Present":
+                                    attendanceCount.put("countOfPresent", (int) attendanceCount.get("countOfPresent") + 1);
+                                    break;
+                                case "Absent":
+                                    attendanceCount.put("countOfAbsent", (int) attendanceCount.get("countOfAbsent") + 1);
+                                    break;
+                                case "Leave":
+                                    attendanceCount.put("countOfLeave", (int) attendanceCount.get("countOfLeave") + 1);
+                                    break;
+                                case "Half Day":
+                                    attendanceCount.put("countOfHalfDay", (int) attendanceCount.get("countOfHalfDay") + 1);
+                                    break;
+                            }
+                        }
+                    });
+
+                    return attendanceCount;
+                })
+                .collect(Collectors.toList());
+    }
 }

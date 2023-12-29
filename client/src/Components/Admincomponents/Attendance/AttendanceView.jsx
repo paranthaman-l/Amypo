@@ -4,8 +4,11 @@ import Services from '../../../Api/Services';
 import { TbAlphabetLatin } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
 const AttendanceView = () => {
-  const [present, setPresent] = useState("")
-  const [date, setDate] = useState("")
+  const [present, setPresent] = useState("all")
+
+  const [date, setDate] = useState(`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`)
   const [attendances, setAttendances] = useState([]);
   const getData = async () => {
     await Services.getTodayAttendance().then((response) => {
@@ -29,6 +32,19 @@ const AttendanceView = () => {
   useEffect(() => {
     getDataByDate();
   }, [date])
+
+  const getDataByDateAndPresent = async () => {
+    await Services.getDataByDateAndPresent(date,present).then((response) => {
+      setAttendances(response.data);
+      console.log(response.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(() => {
+    getDataByDateAndPresent();
+  }, [present])
+
   const handleMakeAttendance = async () => {
     await Services.makeAttendance(date).then((response) => {
       console.log(response);
@@ -78,9 +94,9 @@ const AttendanceView = () => {
       <div className="flex w-full justify-between ">
         <p className='flex items-center text-2xl text-[#555555] font-bold'>Attendance</p>
         <div className="flex items-center justify-center">
-          <div className="flex justify-end my-5">
-            <Button onClick={handleMakeAttendance} className='text-white bg-green1 hover:bg-green-900 '>Make Attendance</Button>
-          </div>
+            <div className="flex justify-end my-5">
+              <Button onClick={handleMakeAttendance} className='text-white bg-green1 hover:bg-green-900 py-1'>Make Attendance</Button>
+            </div>
           <input name='date' onChange={(e) => setDate(e.target.value)} value={date} className="appearance-none block w-full bg-[#f0f0f0] mx-3 text-grey-darker border border-gray rounded py-2 px-4 " id="dateFrom" type="date" placeholder="" />
           <Select label='Attendance' value={present || 'All'} className=''>
             <Option onClick={() => setPresent("all")} className=''>All</Option>
@@ -205,9 +221,9 @@ const AttendanceView = () => {
                 </tr>
               )
             })}
-
           </tbody>
         </table>
+
 
 
         {/* <p className='flex items-center text-lg text-[#555555] font-bold'>Employee List</p>
@@ -232,6 +248,7 @@ const AttendanceView = () => {
         <Button onClick={handleSubmit} className='text-white bg-green1 hover:bg-green-900'>Submit</Button>
       </div>
     </div>
+
   )
 }
 

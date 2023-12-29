@@ -12,6 +12,7 @@ import LeaveApply from "../Pages/User/LeaveApply";
 import Attendance from '../Pages/Admin/Attendance'
 import Payslip from "../Pages/Admin/Payslip";
 import Profile from "../Pages/Profile";
+import AttendanceReport from "../Pages/Admin/AttendanceReport";
 export const Routers = () => {
   return (
     <>
@@ -41,6 +42,7 @@ export const Routers = () => {
             <Route path="/leaveRequests" element={<LeaveRequests />} />
             <Route path="/payslip" element={<Payslip />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/attendanceReport" element={<AttendanceReport />} />
           </Route>
         </Routes>
       </BrowserRouter>

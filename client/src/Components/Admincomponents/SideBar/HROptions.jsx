@@ -64,6 +64,11 @@ const HROptions = () => {
           link: "/attendance",
         },
         {
+          label: "Attendance Report",
+          value: "attendanceReport",
+          link: "/attendanceReport",
+        },
+        {
           label: "Department",
           value: "department",
           link: "/department",

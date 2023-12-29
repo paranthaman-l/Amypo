@@ -11,5 +11,7 @@ import com.amypo.amypobackend.Models.Attendance;
 public interface AttendanceRepository extends CrudRepository<Attendance,String> {
 
     List<Attendance> findByDate(String date);
+
+    List<Attendance> findAllByDateAndIsPresent(String date, String isPresent);
     
 }

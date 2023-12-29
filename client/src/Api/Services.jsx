@@ -71,6 +71,12 @@ class Services{
     makeAttendance(date){
         return commonApi.post("/makeAttendance",{},{params:{date}});
     }
+    getDataByDateAndPresent(date,isPresent){
+        return commonApi.get("/getDataByDateAndPresent",{params:{date,isPresent}});
+    }
+    getReport(startDate,endDate){
+        return commonApi.get("/getReportByDate",{params:{startDate,endDate}});
+    }
 }
 
 export default new Services();

@@ -18,7 +18,7 @@ const AdminSideBar = () => {
         <div className='flex flex-col min-w-[260px] min-h-screen '>
             <div className="flex flex-col ">
                 <div className="flex  items-center p-3">
-                    <img className='w-14 h-14 rounded-md mx-3' src="https://wrraptheme.com/templates/lucid/hr/bs5/dist/assets/images/user.png" alt="" />
+                    <img className='w-14 h-14 rounded-md mx-3' src={user?.profile || "https://wrraptheme.com/templates/lucid/hr/bs5/dist/assets/images/user.png"} alt="" />
                     <div className="">
                         <p className='text-sm font-extralight'>Welcome,</p>
                         <Menu placement='bottom-start'>
