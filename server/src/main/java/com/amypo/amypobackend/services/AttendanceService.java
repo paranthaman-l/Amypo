@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,26 +132,30 @@ public class AttendanceService {
         return attendanceRepository.findAllByDateAndIsPresent(date, isPresent);
     }
 
-    public Map<String, Integer> getMonthlyAttendanceReport(String month, String year) {
+    public Map<String, ArrayList<Attendance>> getMonthlyAttendanceReport(String month, String year) {
         List<Attendance> allRecords = (List<Attendance>) attendanceRepository.findAll();
 
-        Map<String, Integer> report = new HashMap<>();
+        Map<String, ArrayList<Attendance>> report = new HashMap<>();
 
         // Calculate start date and end date of the month
         LocalDate startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
-
         // Loop through all records
         for (Attendance record : allRecords) {
             // Parse the date and check if it falls within the start and end dates
+
             LocalDate recordDate = LocalDate.parse(record.getDate(), DateTimeFormatter.ISO_DATE);
             if (!recordDate.isBefore(startDate) && !recordDate.isAfter(endDate)) {
                 // Update the report accordingly
-                String employeeName = record.getName(); // Adjust this based on your actual field
-                report.put(employeeName, report.getOrDefault(employeeName, 0) + 1);
+                String employeeName = record.getUid(); // Adjust this based on your actual field
+                ArrayList<Attendance> list = (ArrayList<Attendance>) report.getOrDefault(employeeName,new ArrayList<Attendance>());
+                list.add(record);
+                report.put(employeeName, report.getOrDefault(employeeName, list));
             }
         }
-
+        for (List<Attendance> records : report.values()) {
+            Collections.sort(records, Comparator.comparing(Attendance::getDate));
+        }
         return report;
     }
 

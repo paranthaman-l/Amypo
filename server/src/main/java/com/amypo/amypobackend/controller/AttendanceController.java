@@ -1,6 +1,7 @@
 package com.amypo.amypobackend.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +68,10 @@ public class AttendanceController {
     }
 
     @GetMapping("/getReport")
-    public ResponseEntity<Map<String, Integer>> getMonthlyAttendanceReport(
+    public ResponseEntity<Map<String, ArrayList<Attendance>>> getMonthlyAttendanceReport(
             @RequestParam String month,
             @RequestParam String year) {
-        Map<String, Integer> report = attendanceService.getMonthlyAttendanceReport(month, year);
+        Map<String, ArrayList<Attendance>> report = attendanceService.getMonthlyAttendanceReport(month, year);
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 

@@ -77,6 +77,9 @@ class Services{
     getReport(startDate,endDate){
         return commonApi.get("/getReportByDate",{params:{startDate,endDate}});
     }
+    getMonthlyReport(month,year){
+        return commonApi.get("/getReport",{params:{month,year}});
+    }
 }
 
 export default new Services();
